@@ -1,0 +1,9 @@
+.idea/
+__pycache__/
+dist/
+django_tasks.egg-info/
+venv/
+
+*.pyc
+*.log
+*.sqlite3
