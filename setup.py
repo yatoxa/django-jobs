@@ -13,7 +13,8 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     license='BSD License',
-    description='A simple Django app to create, manage and execute async tasks.',
+    description='A simple Django app to create, '
+                'manage and execute async tasks.',
     long_description=README,
     url='https://github.com/yatoxa/django-tasks',
     author='Toxa Yantsen',

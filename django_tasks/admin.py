@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericTabularInline
 
-from tasks.models import Task
+from .models import Task
 
 
 class TaskAdminMixin(object):

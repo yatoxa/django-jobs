@@ -2,7 +2,7 @@ import logging
 
 from django.core.management.base import BaseCommand
 
-from tasks.models import Task
+from ...models import Task
 
 
 logger = logging.getLogger(__name__)
