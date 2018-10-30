@@ -7,12 +7,12 @@ from django.contrib.contenttypes.models import ContentType
 
 
 __all__ = [
-    'TaskMakerMixin',
-    'Task',
+    'JobMakerMixin',
+    'Job',
 ]
 
 
-class Task(models.Model):
+class Job(models.Model):
 
     STATUS_CREATED = 0
     STATUS_SCHEDULED = 1
@@ -70,14 +70,14 @@ class Task(models.Model):
     )
 
     class Meta:
-        verbose_name = 'task'
-        verbose_name_plural = 'tasks'
+        verbose_name = 'job'
+        verbose_name_plural = 'jobs'
 
     def __str__(self):
-        return 'Task - %s' % self.created
+        return 'Job - %s' % self.created
 
     def handle(self):
-        self.maker_object.handle_task(self.handler_id)
+        self.maker_object.handle_job(self.handler_id)
 
     def save(self, *args, **kwargs):
         now = timezone.now()
@@ -86,24 +86,24 @@ class Task(models.Model):
             self.created = now
 
         self.modified = now
-        super(Task, self).save(*args, **kwargs)
+        super(Job, self).save(*args, **kwargs)
 
 
-class TaskMakerMixin(models.Model):
+class JobMakerMixin(models.Model):
 
-    _task_handlers = None
+    _job_handlers = None
 
-    tasks = GenericRelation(Task)
+    jobs = GenericRelation(Job)
 
     class Meta:
         abstract = True
 
     @classmethod
-    def register_task_handler(cls, handler, handler_id, handler_name):
-        if cls._task_handlers is None:
-            cls._task_handlers = dict()
+    def register_job_handler(cls, handler, handler_id, handler_name):
+        if cls._job_handlers is None:
+            cls._job_handlers = dict()
 
-        cls._task_handlers[handler_id] = dict(
+        cls._job_handlers[handler_id] = dict(
             handler=handler,
             name=handler_name,
         )
@@ -111,33 +111,33 @@ class TaskMakerMixin(models.Model):
         return handler
 
     def get_handler_name(self, handler_id):
-        return self._task_handlers[handler_id]['name'].upper() or handler_id
+        return self._job_handlers[handler_id]['name'].upper() or handler_id
 
-    def create_task(self, handler_id):
-        return self.tasks.get_or_create(
+    def create_job(self, handler_id):
+        return self.jobs.get_or_create(
             handler_id=handler_id,
-            status=Task.STATUS_CREATED,
+            status=Job.STATUS_CREATED,
             defaults=dict(
                 maker_object=self,
             ),
         )
 
-    def schedule_task(self, handler_id):
-        return self.tasks.get_or_create(
+    def schedule_job(self, handler_id):
+        return self.jobs.get_or_create(
             handler_id=handler_id,
             status__in=(
-                Task.STATUS_CREATED,
-                Task.STATUS_SCHEDULED,
-                Task.STATUS_STARTED,
-                Task.STATUS_RESTARTED,
-                Task.STATUS_STOPPED,
-                Task.STATUS_DONE,
+                Job.STATUS_CREATED,
+                Job.STATUS_SCHEDULED,
+                Job.STATUS_STARTED,
+                Job.STATUS_RESTARTED,
+                Job.STATUS_STOPPED,
+                Job.STATUS_DONE,
             ),
             defaults=dict(
                 maker_object=self,
-                status=Task.STATUS_SCHEDULED,
+                status=Job.STATUS_SCHEDULED,
             ),
         )
 
-    def handle_task(self, handler_id):
-        return self._task_handlers[handler_id]['handler'](self)
+    def handle_job(self, handler_id):
+        return self._job_handlers[handler_id]['handler'](self)

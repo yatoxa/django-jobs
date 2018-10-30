@@ -1,10 +1,10 @@
 from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericTabularInline
 
-from .models import Task
+from .models import Job
 
 
-class TaskAdminMixin(object):
+class JobAdminMixin(object):
 
     fields = (
         'is_enabled',
@@ -32,8 +32,8 @@ class TaskAdminMixin(object):
     get_handler_name.short_description = 'handler'
 
 
-class TaskTabularInline(TaskAdminMixin, GenericTabularInline):
-    model = Task
+class JobTabularInline(JobAdminMixin, GenericTabularInline):
+    model = Job
     ct_field = 'content_type'
     ct_fk_field = 'object_id'
     extra = 0
@@ -42,8 +42,8 @@ class TaskTabularInline(TaskAdminMixin, GenericTabularInline):
         return False
 
 
-@admin.register(Task)
-class TaskAdmin(TaskAdminMixin, admin.ModelAdmin):
+@admin.register(Job)
+class JobAdmin(JobAdminMixin, admin.ModelAdmin):
     list_display = (
         'maker_object',
         'get_handler_name',

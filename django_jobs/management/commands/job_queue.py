@@ -2,31 +2,31 @@ import logging
 
 from django.core.management.base import BaseCommand
 
-from ...models import Task
+from ...models import Job
 
 
 logger = logging.getLogger(__name__)
 
 
-def handle_tasks():
-    tasks = Task.objects.filter(
+def handle_jobs():
+    jobs = Job.objects.filter(
         is_enabled=True,
-        status=Task.STATUS_SCHEDULED,
+        status=Job.STATUS_SCHEDULED,
     )
 
-    for task in tasks:
+    for job in jobs:
         try:
-            task.handle()
+            job.handle()
         except Exception as e:
-            logger.exception('TASK HANDLING ERROR:')
-            task.status = Task.STATUS_ERROR
-            task.error_message = str(e)
+            logger.exception('JOB HANDLING ERROR:')
+            job.status = Job.STATUS_ERROR
+            job.error_message = str(e)
             update_fields = {'status', 'error_message'}
         else:
-            task.status = Task.STATUS_DONE
+            job.status = Job.STATUS_DONE
             update_fields = {'status'}
 
-        task.save(update_fields=update_fields)
+        job.save(update_fields=update_fields)
 
 
 class Command(BaseCommand):
@@ -36,4 +36,4 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        handle_tasks()
+        handle_jobs()

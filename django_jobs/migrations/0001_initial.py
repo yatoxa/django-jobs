@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Task',
+            name='Job',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created', models.DateTimeField(editable=False, verbose_name='created at')),
@@ -28,8 +28,8 @@ class Migration(migrations.Migration):
                 ('content_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='contenttypes.ContentType')),
             ],
             options={
-                'verbose_name_plural': 'tasks',
-                'verbose_name': 'task',
+                'verbose_name_plural': 'jobs',
+                'verbose_name': 'job',
             },
         ),
     ]
