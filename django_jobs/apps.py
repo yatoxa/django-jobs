@@ -1,5 +1,6 @@
 from django.apps import AppConfig
 
 
-class JobsConfig(AppConfig):
-    name = 'jobs'
+class DjangoJobsConfig(AppConfig):
+    name = 'django_jobs'
+    verbose_name = 'Django Jobs'
